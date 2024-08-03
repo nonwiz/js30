@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Sand Glass by Khazifire</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-[#222222] flex justify-center items-center h-dvh flex-col text-[#979797]">
+
+    <span id='time' class="text-3xl"></span>
+    <svg  id='hourglassContainer' viewBox="0 0 70 100" class="stroke-[#555555] fill-[#444444] size-64" >
+        <defs>
+          <path id="hourglass" d="M 5 5 h 60 q 0 22.5 -28 45 28 22.5 28 45 h -60 q 0 -22.5 28 -45 -28 -22.5 -28 -45z" />
+          <clipPath id="clip--hourglass">
+            <use href="#hourglass" />
+          </clipPath>
+        </defs>
+      
+        <g clip-path="url(#clip--hourglass)">
+          <rect id="sand" width="70" height="50" fill="#979797" stroke="none" />
+        </g>
+
+        <g stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <use href="#hourglass" />
+          <path d="M 5 5 v 90" />
+          <path d="M 65 5 v 90" />
+        </g>
+        <g >
+          <rect width="70" height="5" />
+          <rect width="70" height="5" y="95" />
+          <circle r="5" cx="5" cy="50" />
+          <circle r="5" cx="65" cy="50" />
+        </g>
+      </svg>
+    <span id='time-seconds' class=" text-4xl tabular-nums""></span>
+
+
+      <script src="script.js"></script>
+</body>
+</html>
