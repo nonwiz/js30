@@ -71,8 +71,8 @@
       const mins = now.getMinutes();
       const secs = now.getSeconds();
 
-      nowHour.textContent = hrs;
-      nowMin.textContent = mins;
+      nowHour.textContent = hrs < 10 ? `0${hrs}` : hrs;
+      nowMin.textContent = mins < 10 ? `0${mins}` : mins;
       const remainingHr = `${24-hrs} hrs`;
       const remainingMin = `${60-mins} mins`;
       info.textContent = `Remaining: ${hrs === 23 ? remainingMin : remainingHr} until midnight.`;
