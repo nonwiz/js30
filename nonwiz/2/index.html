@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8">
@@ -62,6 +62,7 @@
     });
 
     const displayClock = () => {
+      const htmlElement = document.documentElement;
       const nowHour = document.getElementById('now-hour');
       const nowMin = document.getElementById('now-min');
       const info = document.getElementById('info');
@@ -73,10 +74,13 @@
 
       nowHour.textContent = hrs < 10 ? `0${hrs}` : hrs;
       nowMin.textContent = mins < 10 ? `0${mins}` : mins;
+
       const remainingHr = `${24-hrs} hrs`;
       const remainingMin = `${60-mins} mins`;
       info.textContent = `Remaining: ${hrs === 23 ? remainingMin : remainingHr} until midnight.`;
+
       displaySeconds(secs);
+      htmlElement.setAttribute('data-theme', hrs > 17 || hrs < 5 ? 'dark' : 'light');
     }
 
     const displaySeconds = (secs) => {
