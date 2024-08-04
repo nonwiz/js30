@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Battery Status</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="icon" href="https://fav.farm/🔋" />
+  <style>
+    :root {
+      --border: 50px;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .gap-2 {
+      gap: 0.5rem;
+    }
+
+    .flex-row {
+      flex-direction: row;
+    }
+
+    .flex-column {
+      flex-direction: column;
+    }
+
+    .center {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 20vh;
+    }
+
+    .second-block {
+      display: grid;
+      text-align: center;
+      font-size: 12px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+    }
+
+    kbd {
+      border-radius: var(--border);
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <main class="container center">
+    <section class="flex flex-row gap-2">
+      <kbd id="now-battery" style="font-size: 14em;"></kbd>
+      <aside class="flex flex-column gap-2">
+        <div>
+          <kbd id="now-date" style="font-size: 8em;"></kbd>
+        </div>
+        <div id="now-control" class="second-block">
+          <input style="grid-column: span 2 / span 2;" type="color" id="now-color" />
+          <input style="grid-column: span 2 / span 2;" type="range" id="now-radius" min="0" max="100" value="50" />
+        </div>
+      </aside>
+
+    </section>
+    <section id="histories" class="flex flex-column">
+      <p id="info"></p>
+    </section>
+  </main>
+
+  <script>
+    function isColorLight(hex) {
+      // Remove the hash at the start if it's there
+      hex = hex.replace(/^#/, '');
+
+      // Parse r, g, b values
+      let r, g, b;
+      if (hex.length === 3) {
+        r = parseInt(hex[0] + hex[0], 16);
+        g = parseInt(hex[1] + hex[1], 16);
+        b = parseInt(hex[2] + hex[2], 16);
+      } else if (hex.length === 6) {
+        r = parseInt(hex.substring(0, 2), 16);
+        g = parseInt(hex.substring(2, 4), 16);
+        b = parseInt(hex.substring(4, 6), 16);
+      } else {
+        throw new Error('Invalid hex color format');
+      }
+
+      // Calculate brightness
+      const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+
+      // Return true if the color is light, false if dark
+      return brightness > 128;
+    }
+
+    function updateTheme(color) {
+      let root = document.documentElement;
+      const isLight = isColorLight(color);
+
+      root.style.setProperty('--pico-background-color', color);
+      root.style.setProperty('--pico-color', isLight ? "black" : "white");
+    }
+
+    function getBatteryStatus(callback) {
+      // Check if the Battery Status API is supported
+      if ('getBattery' in navigator) {
+        navigator.getBattery().then(function(battery) {
+          // Call the callback with the initial battery level
+          callback(Math.round(battery.level * 100));
+
+          // Listen for changes in battery level
+          battery.addEventListener('levelchange', function() {
+            callback(Math.round(battery.level * 100));
+          });
+
+          // Optionally, listen for charging status changes
+          battery.addEventListener('chargingchange', function() {
+            const chargingStatus = battery.charging ? 'Charging' : 'Not charging';
+            console.log('Charging Status: ' + chargingStatus);
+          });
+        });
+      } else {
+        console.log('Battery Status API is not supported on this browser.');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      runMain();
+
+      document.getElementById('now-color').addEventListener('input', (e) => {
+        updateTheme(e.target.value);
+      });
+
+      document.getElementById('now-radius').addEventListener('input', (e) => {
+        const border = e.target.value;
+        document.documentElement.style.setProperty('--border', border + "px");
+      });
+    });
+
+    const runMain = () => {
+      const nowBattery = document.getElementById('now-battery');
+      const nowDate = document.getElementById('now-date');
+      const info = document.getElementById('info');
+      const now = new Date();
+
+      const hrs = now.getHours();
+      const mins = now.getMinutes();
+
+      getBatteryStatus((remaining) => {
+        nowBattery.textContent = remaining + "%";
+      })
+
+      nowDate.textContent = `${now.getMonth() + 1}/${now.getDate()}`;
+
+      const remainingHr = `${24 - hrs} hrs`;
+      const remainingMin = `${60 - mins} mins`;
+      info.textContent = `Remaining: ${remainingHr} ${remainingMin} until midnight.`;
+
+    }
+
+    setInterval(runMain, 1000);
+
+  </script>
+
+</body>
+
+</html>
