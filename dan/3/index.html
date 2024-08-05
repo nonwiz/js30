@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/dan/memo/navigation.js"></script>
+    <title>Document</title>
+</head>
+ <body >
+
+    <main class="gap-4 flex-col flex justify-center items-center">
+        <div class="flex items-center justify-center h-full">
+            <div id="ref1" class="border h-64 rounded-md"><img src="/dan/3/img/peep-19.svg" class="size-full" /></div>
+            <div id="ref2" class="border h-64 rounded-md"><img src="/dan/3/img/peep-48.svg" class="size-full"/></div>
+        </div>
+  
+        <div class="flex gap-6 items-center mt-24">
+            <input  type="color" name="ref1-color" value="#222222">
+
+            <label class="items-center cursor-pointer flex flex-col justify-center">
+                <input type="checkbox" class="hidden peer"  id="switch">
+                <div class="relative w-11 h-6 border peer-focus:outline-none peer-focus:ring-4  rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-white/40"></div>
+                <span class="text-sm font-medium  ">Toggle me</span>
+              </label>
+
+            <input type="color" name="ref2-color" value="#222222" >
+        </div>
+  
+
+    </main>
+</body> 
+
+<style>
+    :root{
+        --ref1: #222222: 
+        --ref2: #ffc600;
+    }
+
+    #ref1{
+        background-color: var(--ref1);
+        transform: rotateY(180deg) rotateY(-54deg) skewY(-20deg);
+        -webkit-box-reflect: right 10px linear-gradient(to right, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
+    }
+    #ref2{
+        background-color: var(--ref2);
+
+        transform: rotateY(0deg) rotateY(-50deg) skewY(-10deg);
+        -webkit-box-reflect: right 10px linear-gradient(to right, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
+    }
+</style>
+
+<script>
+    const switcher = document.getElementById('switch');
+    const imag1 = document.getElementById('ref1');
+    const imag2 = document.getElementById('ref2');
+    const colorInput1 = document.getElementsByName('ref1-color')[0];
+    const colorInput2 = document.getElementsByName('ref2-color')[0];
+
+
+    colorInput1.addEventListener('input', (e) => {
+        document.documentElement.style.setProperty(`--ref1`, e.target.value);
+    });
+    colorInput2.addEventListener('input', (e) => {
+        document.documentElement.style.setProperty(`--ref2`, e.target.value);
+    });
+
+    switcher.addEventListener('change', (e) => {
+        if(e.target.checked){
+
+            imag1.classList.remove('bg-black');
+            imag1.classList.add('shadow-xl');
+            imag1.style.opacity = 1;
+            imag2.classList.remove('bg-black');
+            imag2.classList.add('shadow-xl');
+            imag2.style.opacity = 1;
+        }else{
+            imag1.style.opacity = 0.5;
+            imag1.classList.add('bg-black');
+            imag1.classList.remove('shadow-xl');
+
+            imag2.style.opacity = 0.5;
+            imag2.classList.add('bg-black');
+            imag2.classList.remove('shadow-xl');
+
+        }
+      
+    });
+</script>
+</html>
