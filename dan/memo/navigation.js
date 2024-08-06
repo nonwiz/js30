@@ -103,7 +103,8 @@ function createNavigation_normal_css(days) {
 window.addEventListener('DOMContentLoaded', () => {
     const days = [
         'Simple key reader', 
-        'Basic sandglass'
+        'Basic sandglass',
+        'Simple color switcher',
     ];
     createNavigation_normal_css(days);
 });
