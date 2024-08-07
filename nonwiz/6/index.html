@@ -57,7 +57,7 @@
       for (const key of Object.keys(participants)) {
         for (let i = 1; i <= 30; i++) {
           const data = await getValidURL(`${url}/${key}/${i}`);
-          if (data == null) {
+          if (data == null || data?.title == null) {
             continue;
           }
           updatedParticipants[key].push(data);
