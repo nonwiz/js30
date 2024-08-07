@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch Playground</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="icon" href="https://fav.farm/🏳️" />
+  <style>
+    .center {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 10vh;
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <main class="container center" id="main">
+  </main>
+  <script>
+    const DEFAULT_PARTICIPANTS = {
+      "nonwiz": [],
+      "pann": [],
+      "dan": [],
+      "tarun": []
+    };
+
+    let participants = DEFAULT_PARTICIPANTS;
+
+    async function getValidURL(url) {
+      try {
+        const response = await fetch(url);
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        return { href: url, title: doc.title };
+      } catch (error) {
+        console.info('Error fetching page:', error);
+        return null;
+      }
+    }
+
+    const url = "https://j30.vercel.app";
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      const stored = localStorage.getItem("participants");
+      if (stored) {
+        participants = JSON.parse(stored);
+        displayChallenges(participants)
+      }
+
+      const updatedParticipants = DEFAULT_PARTICIPANTS;
+      for (const key of Object.keys(participants)) {
+        for (let i = 1; i <= 30; i++) {
+          const data = await getValidURL(`${url}/${key}/${i}`);
+          if (data == null) {
+            continue;
+          }
+          updatedParticipants[key].push(data);
+        }
+      }
+      participants = updatedParticipants;
+      displayChallenges(participants);
+      localStorage.setItem("participants", JSON.stringify(updatedParticipants));
+
+    });
+
+    function displayChallenges(participants) {
+      const main = document.getElementById("main");
+      main.innerHTML = "";
+      for (const key of Object.keys(participants)) {
+        const section = document.createElement("section");
+        section.classList.add("flex", "gap-2");
+        section.innerHTML = `
+          <h2>${key}</h2>
+          <ul>
+            ${participants[key].map(p => `<li><a href="${p.href}" target="_blank">${p.title}</a></li>`).join("")}
+          </ul>
+        `;
+        main.appendChild(section);
+      }
+    }
+
+
+
+  </script>
+
+</body>
+
+</html>
