@@ -78,7 +78,8 @@
         section.innerHTML = `
           <h2>${key}</h2>
           <ul>
-            ${participants[key].filter(i => i.title && i.title.length > 0).map(p => `<li><a href="${p.href}" target="_blank">${p.title}</a></li>`).join("")}
+            ${participants[key].filter(i => i.title && i.title.length > 0).map((p, index) =>
+              `<li><a href="${p.href}" target="_blank">Day ${index + 1}: ${p.title}</a></li>`).join("")}
           </ul>
         `;
         main.appendChild(section);
